@@ -1,0 +1,132 @@
+---
+title: "🎄👨‍💻 Day 13: Distress Signal"
+description: "A recursive distress?"
+slug: aoc22-13
+written: "Dec 13 2022"
+updated: "Nov 20, 2023"
+tags:
+  - aoc
+---
+
+import MarginNote from "@/components/MarginNote.astro";
+
+Hello, recursion! At last, we meet. On day 13, having abandoned harassing monkeys and algorithms on graphs to find the best paths <MarginNote text="Alas, graphs are a subject about which I know almost nothing. I left aside the problem of Day 12 as a *holidays assignment*. I will study more and come back with the solution in due time."/>, we are grappling with deciphering a help message.
+
+### Part 1
+
+#### Reading the input
+
+Our multi-function device still does not seem to be working properly, despite having a screen that allows it to display as many as 8 characters. We soon discover that we receive the signal packets in a random order. Our (first) task is to find which pairs of packets are in the correct order. But order according to what criteria? Here are the first lines of the example input:
+
+```
+[1,1,3,1,1]
+[1,1,5,1,1]
+
+[[1],[2,3,4]]
+[[1],4]
+```
+
+#### The solution
+
+Packets are represented by lists that can contain either integers or other lists. We have to compare pairs of elements for each packet, and there are three rules for establishing an order:
+
+1. If they are integers, the order is the usual one: smaller numbers will come first. In the first case of the example, 1 vs. 1 is not decisive, but 3 vs. 5 is obvious.
+2. If both elements are lists, we compare their elements one by one. If the first list contains an integer **greater** than its corresponding one in the second list, then the order of the packets is **wrong**. If the first list contains **fewer** elements than the second, the order is **correct** (and will be incorrect vice versa). If the order cannot be determined, we must continue with the next part of the input.
+3. If **only one** of the two elements is an integer and the other is a list, we must convert the integer to a list (like `1 → [1]`) and retry the comparison.
+
+It is clear that the gist of the solution to this problem will be the function that performs the comparison. Such a function will inevitably be a recursive function.
+
+Reading the input presents no particular difficulty, but we must find an agile way to read strings that _look like_ lists as objects of type `list`. To do this, we have the built-in function `eval()` whose “argument is parsed and evaluated as a Python expression”[^2].
+
+[^2]: From the [official documentation](https://docs.python.org/3/library/functions.html?#eval) of Python.
+
+The result will be an array (list of lists), each row a pair of packets, whatever composition we have. Now for the interesting part. We need to loop over this array and compare the individual pairs. We need to remember the three rules above to understand how the function should behave, which is as follows:
+
+```python
+def compare(p1, p2):
+    """Compare two packets"""
+    # (1) check if both args are integers
+    if isinstance(p1, int):
+        if isinstance(p2, int):
+            # < 0 means correct ordering
+            # 0 means undefined
+            # > 0 wrong ordering
+            return p1 - p2
+        # (2a) 'p2' must be a list, but 'p1' is not
+        p1 = [p1]
+
+    # (2b) 'p1' must be a list
+	#      'p2' must be as well if it's not already
+    if isinstance(p2, int):
+        p2 = [p2]
+
+    # (3) recursively compare two lists
+    for x, y in zip(p1, p2):
+        if (r := compare(x, y)):
+            return r
+
+    # (4) compare lengths
+    return len(p1) - len(p2)
+```
+
+**(1)** The first part compares the two arguments if they are both integers. In that case, it returns their difference (we will see in Part 2 why it will simplify our lives).
+
+**(2a)** If the second argument `p2` was not an integer, then we need to convert `p1` to a list.
+
+**(2b)** If `p1` were not an integer, then we need `p2` to be a list. We convert `p2`, in case it is not already a list.
+
+**(3)** With two lists, we need to start going down a level until we have two integers in hand. That is the only direct comparison we can always make. We do a `for` loop that again takes pairs of elements from `p1` and `p2`. If, at some point, it returns a value **different from 0**, i.e. `True` (in Python `False` is 0), then that value is the result of the comparison. Otherwise, it means the elements don't have an intrinsic ordering.
+
+**(4)** Finally, lists of different lengths (even nested list with empty elements like `[[[]]]` vs `[[]]`) determine an order (shorter vs longer is correct). Again, we calculate the difference in lengths: negative number means correct order, positive wrong order.
+
+The first part ends with a loop – which can certainly be rewritten in a more elegant and compact way:
+
+```python
+def part1(data):
+    right_order = []
+
+    for i, pair in enumerate(data, start=1):
+        if compare(*pair) < 0:
+            right_order.append(i)
+
+    return sum(right_order)
+```
+
+### Part 2
+
+Now we must sort all the packets, including two extra ones: `[[2]]` and `[[6]]`. We must then find the indexes these two packages have in the ordered set of packages and multiply them together.
+
+First, we need a simple list of packets, not a list of pairs (i.e., the matrix we have been working with so far). Again, this can be written much better[^3]:
+
+```python
+unroll = []
+# add the extra packets
+unroll.extend([[[2]], [[6]]])
+
+for x, y in data:
+	unroll.extend([x, y])
+```
+
+[^3]: Or use `itertools.chain`, which I [discovered today](https://docs.python.org/3/library/itertools.html?highlight=itertools#itertools.chain.from_iterable). So much can be learned!
+
+At this point, all we need to do is sort this new list. Python already has built-in the `sorted()` function (or the in-place `.sort()` method). But we discover one thing that doesn't work: the `key` parameter of `sorted` accepts **a single argument function**, while our `compare()` takes two.
+
+The `key` function, in essence, converts the elements of the array to a numeric value that is then used as the “ordinal criteria”. We would have to write a conversion between `key` and `compare()`, except that... it already exists! It is part of the `functools` module and is called `cmp_to_key()`: it takes a two-argument function and pulls out[^4] a function that can be passe to the `key` parameter. The hidden gems of Python's standard library.
+
+```python
+def part2(data):
+    unroll = []
+    # add the extra packets
+    unroll.extend([[[2]], [[6]]])
+
+    for x, y in data:
+        unroll.extend([x, y])
+
+    unroll.sort(key=cmp_to_key(compare))
+
+    return (1 + unroll.index([[2]])) * (1 + unroll.index([[6]]))
+```
+
+One crucial point of the `cmp` function to be converted into a `key` function: it **must** return a negative value for less-than, zero for equal, and a positive value for greater-than. That's the reason to write `compare()` as I did, and not as a function returning `True/False`.
+
+[^4]: A small bonus, useful as a future reference. [Here](https://github.com/python/cpython/blob/985a71032bf055240e61259285a0b4925c925383/Lib/functools.py#L203) is the CPython implementation of the `itertools.cmp_to_key` function. Another tidbit to keep in mind.
