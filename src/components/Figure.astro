@@ -1,0 +1,37 @@
+---
+import { type ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+
+interface Props {
+  imgSrc: ImageMetadata;
+  alt?: string;
+  caption?: string;
+}
+
+const { imgSrc, alt = "", caption = "", ...attrs } = Astro.props;
+---
+
+<figure>
+  <Image src={imgSrc} alt={alt} {...attrs} />
+  {
+    caption && (
+      <figcaption>
+        <p>{caption}</p>
+      </figcaption>
+    )
+  }
+</figure>
+
+<style>
+  .prose figcaption > p {
+    @apply text-center italic text-base block my-0 mx-3;
+  }
+
+  .prose figure :where(img, figcaption) {
+    @apply my-4 mx-0;
+  }
+
+  .prose img {
+    @apply shadow-md rounded w-full;
+  }
+</style>

@@ -1,0 +1,67 @@
+---
+import { nanoid } from 'nanoid';
+import { marked } from 'marked';
+
+interface Props {
+	text: string;
+	marker?: string;
+}
+
+const uniqueId = nanoid();
+const { text, marker = '*' } = Astro.props;
+const htmlText = marked.parseInline(text);
+---
+
+<span class='margin-note-container'>
+	<label for={`marginnote-${uniqueId}`} class='margin-toggle'>
+		<sup>{marker}</sup>
+	</label>
+	<input type='checkbox' id={`marginnote-${uniqueId}`} class='margin-toggle' />
+	<span class='margin-note-marker'><sup>{marker}</sup></span>
+	<span class='margin-note-text' set:html={htmlText} />
+</span>
+
+<style>
+	sup {
+		@apply -left-[0.1em] -top-1;
+	}
+
+	.margin-note-text {
+		@apply font-sans relative opacity-50 dark:opacity-70 float-right clear-right w-1/2 my-0 ml-0 mr-[-60%];
+	}
+
+	.margin-toggle {
+		@apply hidden;
+	}
+
+	.margin-note-marker {
+		@apply cursor-pointer inline-block text-xl;
+	}
+
+	.margin-note-marker:hover {
+		@apply text-red-800 dark:text-red-500;
+	}
+
+	.margin-toggle:not(:checked) + .margin-note-marker:hover + .margin-note-text {
+		@apply opacity-100;
+	}
+
+	@media (max-width: 1178px) {
+		.margin-note-text,
+		.margin-note-marker {
+			@apply hidden;
+		}
+
+		.margin-toggle:checked ~ .margin-note-text {
+			@apply block opacity-100 float-left clear-both left-4 w-[95%] my-4 mx-0;
+		}
+
+		label.margin-toggle {
+			@apply cursor-default inline;
+		}
+
+		sup {
+			@apply text-lg text-red-800 dark:text-red-500;
+		}
+	}
+</style>

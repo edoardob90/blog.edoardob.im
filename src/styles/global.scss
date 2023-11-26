@@ -8,21 +8,30 @@
 	  @apply font-serif leading-snug bg-white text-black dark:bg-slate-900 dark:text-white;
 	}
   
-	a:hover :not(img),
-	label.margin-toggle:hover {
+	a:hover :not(img) {
 	  @apply bg-red-100 rounded-sm dark:bg-slate-600;
 	}
-  
-	.prose figcaption > p {
-	  @apply text-center italic text-base block my-0 mx-3;
-	}
-  
-	.prose figure :where(img, figcaption) {
-	  @apply my-4 mx-0;
-	}
-  
-	.prose img {
-	  @apply shadow-md rounded w-full;
+
+	.prose {
+		figcaption > p {
+			@apply text-center italic text-base block my-0 mx-3;
+		  }
+
+		figure :where(img, figcaption) {
+			@apply my-4 mx-0;
+		}
+
+		img {
+			@apply shadow-md rounded w-full;
+		}
+
+		blockquote > p {
+			@apply before:content-none after:content-none;
+		}
+
+		p > cite {
+			@apply block not-italic text-base mt-8;
+		}
 	}
   
 	#footnote-label {
@@ -47,10 +56,6 @@
 	  dark:prose-invert prose-a:underline prose-a:decoration-red-800 dark:prose-a:decoration-red-500
 	  prose-a:decoration-wavy prose-a:decoration-1 prose-a:underline-offset-[5px]
 	  hover:prose-a:bg-red-100 hover:dark:prose-a:bg-slate-600 hover:prose-a:rounded-sm;
-	}
-  
-	.prose blockquote > p {
-	  @apply before:content-none after:content-none;
 	}
   }
   
