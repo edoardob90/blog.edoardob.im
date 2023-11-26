@@ -5,12 +5,15 @@ import TagList from '@/components/TagList.astro';
 import getPostsWithTag from '@/utils/getPostsWithTag';
 import getUniqueTags from '@/utils/getUniqueTags';
 
-const posts = await getCollection('blog');
+const posts = await getCollection('blog', ({ data }) => {
+	return data.draft !== true;
+});
 
 type Tags = {
 	name: string;
 	posts: CollectionEntry<'blog'>[];
 };
+
 const tags: Tags[] = [];
 
 const uniqueTags = getUniqueTags(posts);

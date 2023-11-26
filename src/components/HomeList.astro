@@ -2,7 +2,9 @@
 import { type CollectionEntry, getCollection } from 'astro:content';
 import PostListItem from '@/components/PostListItem.astro';
 
-const posts = await getCollection('blog');
+const posts = await getCollection('blog', ({ data }) => {
+	return data.draft !== true;
+});
 
 type Post = CollectionEntry<'blog'>;
 

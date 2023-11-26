@@ -4,7 +4,9 @@ import { SITE } from '@/consts';
 import getSortedPosts from '@/utils/getSortedPosts';
 
 export async function GET(context) {
-	const posts = await getCollection('blog');
+	const posts = await getCollection('blog', ({ data }) => {
+		return data.draft !== true;
+	});
 	const sortedPosts = getSortedPosts(posts, true);
 
 	return rss({
