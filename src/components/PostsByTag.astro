@@ -1,0 +1,51 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import PostListItem from '@/components/PostListItem.astro';
+import TagList from '@/components/TagList.astro';
+import getPostsWithTag from '@/utils/getPostsWithTag';
+import getUniqueTags from '@/utils/getUniqueTags';
+
+const posts = await getCollection('blog');
+
+type Tags = {
+	name: string;
+	posts: CollectionEntry<'blog'>[];
+};
+const tags: Tags[] = [];
+
+const uniqueTags = getUniqueTags(posts);
+uniqueTags.forEach((tag) => {
+	const postsWithTag = getPostsWithTag(posts, tag, true);
+	tags.push({
+		name: tag,
+		posts: postsWithTag,
+	});
+});
+---
+
+<div>
+	<div class='mb-8 px-0 pb-4 border-b border-dashed border-red-800 dark:border-red-500'>
+		<TagList tags={tags} />
+	</div>
+
+	{
+		tags.map((tag) => (
+			<>
+				<h3 id={tag.name} class='font-mono text-2xl mt-8 mb-2'>
+					#{tag.name}
+				</h3>
+				<ul>
+					{tag.posts.map((post) => (
+						<PostListItem
+							slug={post.slug}
+							title={post.data.title}
+							written={post.data.written}
+							includeDate={false}
+							extraClasses='ml-4'
+						/>
+					))}
+				</ul>
+			</>
+		))
+	}
+</div>
