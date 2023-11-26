@@ -1,0 +1,94 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import PostListItem from '@/components/PostListItem.astro';
+
+const posts = await getCollection('blog');
+
+type Post = CollectionEntry<'blog'>;
+
+type Month = {
+	month: number;
+	name: string;
+	posts: Post[];
+};
+
+type Year = {
+	year: number;
+	months: Month[];
+};
+
+const years: Year[] = [];
+const monthNames = [
+	'January',
+	'February',
+	'March',
+	'April',
+	'May',
+	'June',
+	'July',
+	'August',
+	'September',
+	'October',
+	'November',
+	'December',
+];
+
+posts.forEach((post) => {
+	const [yearDate, monthDate] = [post.data.written.getFullYear(), post.data.written.getMonth()];
+
+	let year: Year | undefined = years.find((year) => year.year === yearDate);
+	if (!year) {
+		year = {
+			year: yearDate,
+			months: [],
+		};
+		years.push(year);
+	}
+
+	let month = year.months.find((month) => month.month === monthDate);
+	if (!month) {
+		const monthName = monthNames[monthDate];
+		month = {
+			month: monthDate,
+			name: monthName,
+			posts: [],
+		};
+		year.months.push(month);
+	}
+
+	month.posts.push(post);
+});
+
+// Sort posts by year-month
+years
+	.sort((a, b) => b.year - a.year)
+	.forEach((year) => {
+		year.months
+			.sort((a, b) => b.month - a.month)
+			.forEach((month) => {
+				month.posts.sort((a, b) => b.data.written.getTime() - a.data.written.getTime());
+			});
+	});
+---
+
+<ul>
+	{
+		years.map((year) => (
+			<>
+				{year.months.map((month, i) => (
+					<>
+						<li class='list-none mx-0 my-5 text-xl font-headline font-bold'>
+							<h2 class='flex justify-between m-0'>
+								<span class='pr-4'>{month.name}</span>
+								<span>{i === 0 && year.year}</span>
+							</h2>
+						</li>
+						{month.posts.map((post) => (
+							<PostListItem slug={post.slug} title={post.data.title} written={post.data.written} />
+						))}
+					</>
+				))}
+			</>
+		))
+	}
+</ul>

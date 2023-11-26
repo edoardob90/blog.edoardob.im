@@ -1,0 +1,33 @@
+---
+interface Props {
+  slug: string;
+  title: string;
+  written: Date;
+  includeDate?: boolean;
+  extraClasses?: string;
+}
+
+const {
+  slug,
+  title,
+  written,
+  includeDate = true,
+  extraClasses = "",
+} = Astro.props;
+
+const day = written.toLocaleDateString("en-US", { day: "2-digit" });
+---
+
+<li class:list={["flex align-middle mb-2", extraClasses]}>
+  {includeDate && <span>{day}</span>}
+  <a href={`/${slug}`}>{title}</a>
+</li>
+
+<style>
+  li span {
+    @apply font-sans mr-6;
+  }
+  li a {
+    @apply hover:underline hover:decoration-wavy hover:underline-offset-[5px] hover:decoration-red-800 dark:hover:decoration-red-500;
+  }
+</style>

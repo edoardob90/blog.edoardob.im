@@ -1,0 +1,37 @@
+---
+import Nav from '@/components/Nav.astro';
+---
+
+<header class='w-full p-6 md:px-24'>
+	<Nav />
+</header>
+
+<style>
+	header {
+		margin-bottom: 2em;
+	}
+
+	header h1 a,
+	header h1 a:visited {
+		text-decoration: none;
+		color: var(--h1-color);
+	}
+
+	header h1 a:hover {
+		color: var(--primary-hover);
+		text-decoration: none;
+	}
+
+	header h1 {
+		margin-top: 0.2em;
+		margin-bottom: 0.2em;
+	}
+
+	header p {
+		margin-top: 0;
+	}
+
+	img.logo-image {
+		border-radius: 80px;
+	}
+</style>

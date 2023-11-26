@@ -1,0 +1,33 @@
+---
+import { NAV_ITEMS } from '@/consts';
+import { SITE, LOGO_IMAGE } from '@/consts';
+import logoImage from '@/assets/logo.jpeg';
+---
+
+<nav class='flex items-center justify-between gap-x-4 flex-wrap'>
+	<a href='/'>
+		{
+			LOGO_IMAGE.show ? (
+				<img src={logoImage.src} alt='Logo' width={LOGO_IMAGE.width} height={LOGO_IMAGE.height} />
+			) : (
+				''
+			)
+		}
+	</a>
+	<a class='text-4xl block font-sans' href='/'>{SITE.title}</a>
+	<ul class='m-0 p-0 list-none flex grow justify-end gap-4 font-headline font-bold'>
+		{
+			NAV_ITEMS.filter((item) => item.show).map((item) => (
+				<li>
+					<a href={item.path}>{item.label}</a>
+				</li>
+			))
+		}
+	</ul>
+</nav>
+
+<style>
+	img {
+		@apply rounded-full hover:grayscale;
+	}
+</style>

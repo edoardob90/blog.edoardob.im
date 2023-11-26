@@ -3,34 +3,54 @@
 @tailwind utilities;
 
 @layer base {
-	h1 {
-		@apply text-4xl font-normal leading-normal;
+	body {
+	  font-size: clamp(1rem, 0.34vw + 0.91rem, 1.19rem);
+	  @apply font-serif leading-snug bg-white text-black dark:bg-slate-900 dark:text-white;
 	}
-	h2 {
-		@apply text-3xl font-normal leading-normal;
+  
+	a:hover :not(img),
+	label.margin-toggle:hover {
+	  @apply bg-red-100 rounded-sm dark:bg-slate-600;
 	}
-	h3 {
-		@apply text-2xl font-normal leading-normal;
+  
+	.prose figcaption > p {
+	  @apply text-center italic text-base block my-0 mx-3;
 	}
-	h4 {
-		@apply text-xl font-normal leading-normal;
+  
+	.prose figure :where(img, figcaption) {
+	  @apply my-4 mx-0;
 	}
-	h5 {
-		@apply text-lg font-normal leading-normal;
+  
+	.prose img {
+	  @apply shadow-md rounded w-full;
 	}
-}
-
-@layer components {
-}
-
-@layer utilities {
-	.bb {
-		@apply border border-red-600 sm:border-blue-600 md:border-green-600 lg:border-black;
+  
+	#footnote-label {
+	  @apply hidden;
 	}
-	.bb2 {
-		@apply border border-green-600 sm:border-red-600 md:border-blue-600 lg:border-pink-600;
+  
+	section.footnotes {
+	  @apply text-base font-sans mx-0 mt-8;
+	  @apply before:content-['•••'] before:text-xl before:block before:text-center before:text-red-800 before:dark:text-red-500;
 	}
-	.flex-center {
-		@apply flex items-center justify-center;
+  
+	.katex {
+	  @apply prose-xl;
 	}
-}
+  
+	section.footnotes .katex {
+	  @apply prose-base;
+	}
+  
+	article {
+	  @apply prose prose-lg md:prose-xl prose-headings:font-headline
+	  dark:prose-invert prose-a:underline prose-a:decoration-red-800 dark:prose-a:decoration-red-500
+	  prose-a:decoration-wavy prose-a:decoration-1 prose-a:underline-offset-[5px]
+	  hover:prose-a:bg-red-100 hover:dark:prose-a:bg-slate-600 hover:prose-a:rounded-sm;
+	}
+  
+	.prose blockquote > p {
+	  @apply before:content-none after:content-none;
+	}
+  }
+  

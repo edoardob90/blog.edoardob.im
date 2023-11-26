@@ -1,0 +1,23 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import type { MarkdownLayoutProps } from 'astro';
+
+type Props = MarkdownLayoutProps<{
+	title: string;
+	author: string;
+	date: string;
+}>;
+
+const { frontmatter } = Astro.props;
+---
+
+<Layout title='About me'>
+	<h1 class='text-2xl font-bold mb-6'>
+		{frontmatter.title}
+	</h1>
+	<article
+		class='prose prose-lg dark:prose-invert prose-a:underline prose-a:decoration-red-800 dark:prose-a:decoration-red-500 prose-a:decoration-wavy prose-a:decoration-1 prose-a:underline-offset-[5px] hover:prose-a:bg-red-100 hover:dark:prose-a:bg-slate-600 hover:prose-a:rounded-sm'
+	>
+		<slot />
+	</article>
+</Layout>
