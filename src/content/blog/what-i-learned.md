@@ -3,7 +3,6 @@ date: 2022-11-30 00:00:00 +0000
 description: What I learned
 tags: []
 title: What I learned
-url: /2022/11/30/what-i-learned.html
 written: 2022-11-30 00:00:00 +0000
 ---
 
