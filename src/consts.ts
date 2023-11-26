@@ -1,6 +1,6 @@
 // Place any global data in this file.
 // You can import this data from anywhere in your site by using the `import` keyword.
-import type { NavItems, Site } from './types';
+import type { NavItems, Site } from '@/types';
 
 export const SITE: Site = {
     title: 'Bald Notes',
