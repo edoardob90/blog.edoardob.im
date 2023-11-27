@@ -29,7 +29,7 @@ Very schematically, for each move we must:
 
 1. Update the position of the leading node.
 2. Determine where the tail node will end up (it might even stay where it is).
-3. Add the new location of the tail node somewhere. Eventually, it will suffice to count the elements in this list. Since we are interested in points visited **at least once**, we must ignore any duplicates. It is possible for a node to pass over a point more than once, if the trajectory described by the input is [a bit convoluted](<tab:https://en.wikipedia.org/wiki/Snake_(video_game_genre)>).
+3. Add the new location of the tail node somewhere. Eventually, it will suffice to count the elements in this list. Since we are interested in points visited **at least once**, we must ignore any duplicates. It is possible for a node to pass over a point more than once, if the trajectory described by the input is [a bit convoluted](<https://en.wikipedia.org/wiki/Snake_(video_game_genre)>).
 
 The most interesting part is step 2: determining how to update the tail coordinates. There are four possibilities:
 

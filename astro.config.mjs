@@ -2,8 +2,9 @@ import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
 import mdx from '@astrojs/mdx';
-import katex from 'rehype-katex';
-import math from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import remarkMath from 'remark-math';
+import rehypeExternalLinks from 'rehype-external-links';
 
 export default defineConfig({
 	site: 'https://blog.edoardob.im',
@@ -18,8 +19,8 @@ export default defineConfig({
 			theme: 'github-dark-dimmed',
 			wrap: true,
 		},
-		remarkPlugins: [math],
-		rehypePlugins: [katex],
+		remarkPlugins: [remarkMath],
+		rehypePlugins: [rehypeExternalLinks, rehypeKatex],
 	},
 	integrations: [
 		tailwind({
