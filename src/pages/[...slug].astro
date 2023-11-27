@@ -5,12 +5,15 @@ import TagList from '@/components/TagList.astro';
 
 export type Props = CollectionEntry<'blog'>;
 
-export function formatDate(date: Date) {
-	return date.toLocaleDateString('en-US', {
+export function formatDate(date: Date, showTime: boolean = false) {
+	const options: Intl.DateTimeFormatOptions = {
+		year: 'numeric',
 		month: 'long',
 		day: 'numeric',
-		year: 'numeric',
-	});
+		hour: showTime ? '2-digit' : undefined,
+		minute: showTime ? '2-digit' : undefined,
+	};
+	return date.toLocaleDateString('en-US', options);
 }
 
 export async function getStaticPaths() {
@@ -55,10 +58,11 @@ const { Content } = await post.render();
 		<div
 			class='border-t border-dashed py-2 px-0 border-red-800 dark:border-red-500 mx-0 mt-2 mb-0 font-sans text-base uppercase'
 		>
-			<span>
-				Written: {formatDate(written)}{
-					updated && updated !== written && `; UPDATED: ${formatDate(updated)}`
-				}
+			<span class='inline-grid grid-cols-1'>
+				<span>
+					Written: {formatDate(written)}
+				</span>
+				{updated && updated !== written && <span>UPDATED: {formatDate(updated, true)}</span>}
 			</span>
 		</div>
 		<div class='mb-4'>
