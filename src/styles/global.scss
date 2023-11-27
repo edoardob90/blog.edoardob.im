@@ -34,23 +34,6 @@
 		}
 	}
   
-	#footnote-label {
-	  @apply hidden;
-	}
-  
-	section.footnotes {
-	  @apply text-base font-sans mx-0 mt-8;
-	  @apply before:content-['•••'] before:text-xl before:block before:text-center before:text-red-800 before:dark:text-red-500;
-	}
-  
-	.katex {
-	  @apply prose-xl;
-	}
-  
-	section.footnotes .katex {
-	  @apply prose-base;
-	}
-  
 	article {
 	  @apply prose prose-lg md:prose-xl prose-headings:font-headline
 	  dark:prose-invert prose-a:underline prose-a:decoration-red-800 dark:prose-a:decoration-red-500

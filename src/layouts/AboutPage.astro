@@ -1,6 +1,7 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import type { MarkdownLayoutProps } from 'astro';
+import { SITE } from '@/consts';
 
 type Props = MarkdownLayoutProps<{
 	title: string;
@@ -9,9 +10,10 @@ type Props = MarkdownLayoutProps<{
 }>;
 
 const { frontmatter } = Astro.props;
+const title = `${SITE.title} | About`;
 ---
 
-<Layout title='About me'>
+<Layout title={title}>
 	<h1 class='text-2xl font-bold mb-6'>
 		{frontmatter.title}
 	</h1>

@@ -28,7 +28,26 @@ const { title, written, updated, tags } = post.data;
 const { Content } = await post.render();
 ---
 
-<Layout title='Post page'>
+<style is:global>
+	section.footnotes {
+		@apply text-base font-sans mx-0 mt-8
+	  before:content-['•••'] before:text-xl before:block before:text-center before:text-red-800 before:dark:text-red-500;
+	}
+
+	#footnote-label {
+		@apply hidden;
+	}
+
+	.katex {
+		@apply prose-xl;
+	}
+
+	section.footnotes .katex {
+		@apply prose-base;
+	}
+</style>
+
+<Layout title={title}>
 	<div class='mx-0 my-8'>
 		<h1 class='text-2xl font-headline font-bold'>
 			{title}
