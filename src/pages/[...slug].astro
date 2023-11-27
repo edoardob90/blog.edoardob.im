@@ -28,10 +28,14 @@ const { title, written, updated, tags } = post.data;
 const { Content } = await post.render();
 ---
 
-<style is:global>
+<style lang='scss' is:global>
 	section.footnotes {
 		@apply text-base font-sans mx-0 mt-8
-	  before:content-['•••'] before:text-xl before:block before:text-center before:text-red-800 before:dark:text-red-500;
+	    before:content-['•••'] before:text-xl before:block before:text-center before:text-red-800 before:dark:text-red-500;
+
+		.katex {
+			@apply prose-base;
+		}
 	}
 
 	#footnote-label {
@@ -40,10 +44,6 @@ const { Content } = await post.render();
 
 	.katex {
 		@apply prose-xl;
-	}
-
-	section.footnotes .katex {
-		@apply prose-base;
 	}
 </style>
 

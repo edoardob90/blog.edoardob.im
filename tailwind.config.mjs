@@ -8,7 +8,7 @@ export default {
 			fontFamily: {
 				serif: ['valkyrie', ...defaultTheme.fontFamily.serif],
 				sans: ['concourse', ...defaultTheme.fontFamily.sans],
-				mono: ['jetbrains_mono', ...defaultTheme.fontFamily.mono],
+				mono: ['iosevka_fixed', ...defaultTheme.fontFamily.mono],
 				headline: ['concourse_caps'],
 			},
 			listStyleType: {
