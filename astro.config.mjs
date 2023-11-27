@@ -12,7 +12,7 @@ export default defineConfig({
 		'/feed': '/feed.xml',
 	},
 	image: {
-		remotePatterns: [{ protocol: 'https' }],
+		remotePatterns: [{ protocol: 'https', hostname: '**.micro.blog', pathname: '/**' }],
 	},
 	markdown: {
 		shikiConfig: {

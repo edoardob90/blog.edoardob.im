@@ -11,6 +11,9 @@
       "~/*": [
         "./public/*"
       ],
+      "@imgs/*": [
+        "./src/assets/images/*"
+      ],
     },
   }
 }
