@@ -2,11 +2,14 @@ import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import { SITE } from '@/consts';
 import getSortedPosts from '@/utils/getSortedPosts';
+import sanitizeHtml from 'sanitize-html';
+import { marked } from 'marked';
 
 export async function GET(context) {
 	const posts = await getCollection('blog', ({ data }) => {
 		return data.draft !== true;
 	});
+
 	const sortedPosts = getSortedPosts(posts, true);
 
 	return rss({
@@ -23,6 +26,7 @@ export async function GET(context) {
 				pubDate: post.data.written,
 				description: post.data.description,
 				link: post.slug,
+				content: sanitizeHtml(marked(post.body)),
 				customData: categories,
 			};
 		}),
