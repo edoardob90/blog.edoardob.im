@@ -25,8 +25,16 @@
 			@apply shadow-md rounded w-full;
 		}
 
-		blockquote > p {
-			@apply before:content-none after:content-none;
+		blockquote {
+			@apply not-italic prose-base md:prose-lg px-10 border-none;
+
+			& p {
+				@apply m-0 before:content-none after:content-none;
+			}
+
+			& :not(p:first-of-type) {
+				@apply indent-4;
+			}
 		}
 
 		p > cite {
