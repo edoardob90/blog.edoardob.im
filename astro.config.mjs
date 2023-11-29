@@ -10,6 +10,7 @@ export default defineConfig({
 	site: 'https://blog.edoardob.im',
 	redirects: {
 		'/feed': '/feed.xml',
+		'/categories': '/tags',
 	},
 	image: {
 		remotePatterns: [{ protocol: 'https', hostname: '**.micro.blog', pathname: '/**' }],

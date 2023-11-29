@@ -13,7 +13,7 @@ const { frontmatter } = Astro.props;
 const title = `${SITE.title} | About`;
 ---
 
-<Layout title={title}>
+<Layout title={title} page='About'>
 	<h1 class='text-2xl font-bold mb-6'>
 		{frontmatter.title}
 	</h1>

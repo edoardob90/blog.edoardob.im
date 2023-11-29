@@ -1,9 +1,15 @@
 ---
 import Nav from '@/components/Nav.astro';
+
+interface Props {
+	page: string;
+}
+
+const { page } = Astro.props;
 ---
 
 <header class='w-full p-6 md:px-24'>
-	<Nav />
+	<Nav page={page} />
 </header>
 
 <style>

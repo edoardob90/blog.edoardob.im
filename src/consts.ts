@@ -20,22 +20,26 @@ export const LOGO_IMAGE = {
 export const NAV_ITEMS: NavItems = [
     {
         path: '/',
-        label: '🏕️ Home',
+        label: 'Home',
+        icon: 'tent',
         show: true
     },
     {
         path: '/about',
-        label: '👋🏻 About',
+        label: 'About',
+        icon: 'circle-user',
         show: true
     },
     {
         path: '/tags',
-        label: '🏷️ Tags',
+        label: 'Tags',
+        icon: 'tags',
         show: true
     },
     {
         path: '/feed',
-        label: '📰 RSS',
+        label: 'RSS',
+        icon: 'rss',
         show: true,
     }
 ]

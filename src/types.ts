@@ -9,5 +9,6 @@ export type Site = {
 export type NavItems = {
     path: string;
     label: string;
+    icon: string;
     show: boolean;
 }[];
