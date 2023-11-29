@@ -11,11 +11,22 @@
 	a:hover :not(img) {
 	  @apply bg-red-100 rounded-sm dark:bg-slate-600;
 	}
+  
+	article {
+		@apply prose prose-lg md:prose-xl
+		prose-pre:prose-lg md:prose-pre:prose-xl
+		prose-headings:font-headline
+		dark:prose-invert prose-a:underline prose-a:decoration-red-800 dark:prose-a:decoration-red-500
+		prose-a:decoration-wavy prose-a:decoration-1 prose-a:underline-offset-[5px]
+		hover:prose-a:bg-red-100 hover:dark:prose-a:bg-slate-600 hover:prose-a:rounded-sm;
 
-	.prose {
+		strong {
+			@apply font-caps font-normal tracking-wide;
+		}
+
 		figcaption > p {
 			@apply text-center italic text-base block my-0 mx-3;
-		  }
+			}
 
 		figure :where(img, figcaption) {
 			@apply my-4 mx-0;
@@ -40,15 +51,6 @@
 		p > cite {
 			@apply block not-italic text-base mt-8;
 		}
-	}
-  
-	article {
-	  @apply prose prose-lg md:prose-xl
-	  prose-pre:prose-lg md:prose-pre:prose-xl
-	  prose-headings:font-headline
-	  dark:prose-invert prose-a:underline prose-a:decoration-red-800 dark:prose-a:decoration-red-500
-	  prose-a:decoration-wavy prose-a:decoration-1 prose-a:underline-offset-[5px]
-	  hover:prose-a:bg-red-100 hover:dark:prose-a:bg-slate-600 hover:prose-a:rounded-sm;
 	}
   }
   
@@ -141,6 +143,78 @@
 	font-stretch: normal;
 	font-display: swap;
 	src: url('/fonts/valkyrie_ot_a_bold_italic.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: "valkyrie_caps";
+	font-style: normal;
+	font-weight: normal;
+	font-stretch: normal;
+	font-display: swap;
+	src: url('/fonts/valkyrie_a_caps_regular.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: "valkyrie_caps";
+	font-style: normal;
+	font-weight: bold;
+	font-stretch: normal;
+	font-display: swap;
+	src: url('/fonts/valkyrie_a_caps_bold.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: "heliotrope";
+	font-style: normal;
+	font-weight: normal;
+	font-stretch: normal;
+	font-display: auto;
+	src: url('/fonts/heliotrope_4_regular.woff2') format('woff2');
+}
+	
+@font-face {
+	font-family: "heliotrope";
+	font-style: italic;
+	font-weight: normal;
+	font-stretch: normal;
+	font-display: auto;
+	src: url('/fonts/heliotrope_4_italic.woff2') format('woff2');
+}
+	
+	@font-face {
+	font-family: "heliotrope";
+	font-style: normal;
+	font-weight: bold;
+	font-stretch: normal;
+	font-display: auto;
+	src: url('/fonts/heliotrope_4_bold.woff2') format('woff2');
+}
+	
+	@font-face {
+	font-family: "heliotrope";
+	font-style: italic;
+	font-weight: bold;
+	font-stretch: normal;
+	font-display: auto;
+	src: url('/fonts/heliotrope_4_bold_italic.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: "heliotrope_caps";
+	font-style: normal;
+	font-weight: normal;
+	font-stretch: normal;
+	font-display: auto;
+	src: url('/fonts/heliotrope_4_caps_regular.woff2') format('woff2');
+}
+	
+	@font-face {
+	font-family: "heliotrope_caps";
+	font-style: normal;
+	font-weight: bold;
+	font-stretch: normal;
+	font-display: auto;
+	src: url('/fonts/heliotrope_4_caps_bold.woff2') format('woff2');
 }
 
 @font-face {

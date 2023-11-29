@@ -33,11 +33,11 @@ const { Content } = await post.render();
 
 <style lang='scss' is:global>
 	section.footnotes {
-		@apply prose-base md:prose-lg font-sans mx-0 mt-8
+		@apply font-outer prose-base md:prose-lg mx-0 mt-8
 	    before:content-['•••'] before:text-xl before:block before:text-center before:text-red-800 before:dark:text-red-500;
 
 		.katex {
-			@apply prose-base;
+			@apply prose-lg;
 		}
 	}
 
@@ -50,7 +50,7 @@ const { Content } = await post.render();
 	}
 </style>
 
-<Layout title={title}>
+<Layout title={title} page='Post'>
 	<div class='mx-0 my-8'>
 		<h1 class='text-2xl font-headline font-bold'>
 			{title}
