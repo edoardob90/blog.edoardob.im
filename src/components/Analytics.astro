@@ -1,47 +1,82 @@
 ---
 interface Props {
-	kudosEmoji?: string;
+	kudosIcon?: string;
 }
 
-const { kudosEmoji = '❤️' } = Astro.props;
+const { kudosIcon = 'heart' } = Astro.props;
 ---
 
 <style>
 	button {
 		@apply font-sans text-lg md:text-xl rounded-md py-1 px-2 hover:bg-red-100 hover:dark:bg-slate-600;
 	}
+</style>
 
+<style is:global>
 	.did_select {
-		@apply opacity-50 cursor-not-allowed hover:bg-inherit;
+		@apply opacity-50;
+	}
+
+	.did_select + .kudos-icon {
+		@apply opacity-50 fill-current;
 	}
 </style>
 
 <ul class='reply-buttons mt-16 p-0 list-none'>
 	<li class='inline mr-2'>
-		<astro-kudos data-kudos={kudosEmoji}>
-			<button class='tinylytics_kudos'>Kudos</button>
+		<astro-kudos data-kudos={kudosIcon}>
+			<button class='flex flex-row items-center'></button>
 		</astro-kudos>
 	</li>
 </ul>
 
 <script>
+	import { createIcons, icons } from 'lucide';
+
 	class AstroKudos extends HTMLElement {
 		constructor() {
 			super();
 
 			// Read the data attribute.
-			const kudosEmoji = this.dataset.kudos;
+			const kudosIcon = this.dataset.kudos;
 
 			// Load the external script.
 			const script = document.createElement('script');
 			script.type = 'text/javascript';
 			script.defer = true;
-			script.src = `https://tinylytics.app/embed/rmUzaKmqQxZxaED2xrNP.js?kudos=${kudosEmoji}`;
+			script.src = 'https://tinylytics.app/embed/rmUzaKmqQxZxaED2xrNP.js?kudos=custom';
 
 			// Append the script to the body.
 			document.body.appendChild(script);
+
+			// Create a button element.
+			const button = this.querySelector('button');
+			if (button) {
+				// Create the counter element
+				const counter = document.createElement('span');
+				counter.className = 'tinylytics_kudos';
+				counter.classList.add('mr-1');
+				counter.innerText = '42';
+				button.appendChild(counter);
+
+				// Create the icon element
+				const icon = document.createElement('i');
+				icon.className = 'kudos-icon';
+				icon.dataset.lucide = kudosIcon;
+				button.appendChild(icon);
+
+				// Check if the button has been clicked before
+				button.addEventListener('click', () => {
+					if (button.querySelector('.did_select')) {
+						button.style.cursor = 'not-allowed';
+						button.style.pointerEvents = 'none';
+					}
+				});
+			}
 		}
 	}
 
 	customElements.define('astro-kudos', AstroKudos);
+
+	createIcons({ icons });
 </script>
