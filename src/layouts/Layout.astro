@@ -9,9 +9,18 @@ interface Props {
 	page: string;
 	author?: string;
 	description?: string;
+	enableAnalytics?: boolean;
+	enableComments?: boolean;
 }
 
-const { title, page, author = SITE.author, description = SITE.description } = Astro.props;
+const {
+	title,
+	page,
+	author = SITE.author,
+	description = SITE.description,
+	enableAnalytics = false,
+	enableComments = false,
+} = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
@@ -82,7 +91,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 			<main>
 				<slot />
 			</main>
-			<Footer />
+			<Footer enableAnalytics={enableAnalytics} />
 		</div>
 	</body>
 </html>

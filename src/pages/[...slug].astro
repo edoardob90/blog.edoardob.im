@@ -2,6 +2,7 @@
 import { type CollectionEntry, getCollection } from 'astro:content';
 import Layout from '@/layouts/Layout.astro';
 import TagList from '@/components/TagList.astro';
+import Analytics from '@/components/Analytics.astro';
 
 export type Props = CollectionEntry<'blog'>;
 
@@ -26,6 +27,7 @@ export async function getStaticPaths() {
 	}));
 }
 
+const enableAnalytics = true;
 const post = Astro.props;
 const { title, written, updated, tags } = post.data;
 const { Content } = await post.render();
@@ -34,7 +36,8 @@ const { Content } = await post.render();
 <style lang='scss' is:global>
 	section.footnotes {
 		@apply font-outer prose-base md:prose-lg mx-0 mt-8
-	    before:content-['•••'] before:text-xl before:block before:text-center before:text-red-800 before:dark:text-red-500;
+	    before:content-['•••'] before:text-xl before:block before:text-center
+		before:text-red-800 before:dark:text-red-500;
 
 		.katex {
 			@apply prose-lg;
@@ -50,7 +53,7 @@ const { Content } = await post.render();
 	}
 </style>
 
-<Layout title={title} page='Post'>
+<Layout title={title} page='Post' enableAnalytics={enableAnalytics}>
 	<div class='mx-0 my-8'>
 		<h1 class='text-2xl font-headline font-bold'>
 			{title}
@@ -72,4 +75,5 @@ const { Content } = await post.render();
 	<article role='article'>
 		<Content />
 	</article>
+	{enableAnalytics && <Analytics />}
 </Layout>
