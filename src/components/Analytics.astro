@@ -49,8 +49,29 @@ const { kudosIcon = 'heart' } = Astro.props;
 			// Append the script to the body.
 			document.body.appendChild(script);
 
+			// Functions for the MutationObserver
+			const handleClassChange = (element: HTMLElement, button: HTMLButtonElement): void => {
+				if (element.classList.contains('did_select')) {
+					button.style.cursor = 'not-allowed';
+					button.style.pointerEvents = 'none';
+				}
+			};
+
+			const createObserver = (targetElement: HTMLElement, button: HTMLButtonElement): void => {
+				const observer = new MutationObserver((mutations: MutationRecord[]) => {
+					mutations.forEach((mutation: MutationRecord) => {
+						if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+							handleClassChange(targetElement, button);
+						}
+					});
+				});
+
+				observer.observe(targetElement, { attributes: true });
+			};
+
 			// Create a button element.
 			const button = this.querySelector('button');
+
 			if (button) {
 				// Create the counter element
 				const counter = document.createElement('span');
@@ -65,13 +86,8 @@ const { kudosIcon = 'heart' } = Astro.props;
 				icon.dataset.lucide = kudosIcon;
 				button.appendChild(icon);
 
-				// Check if the button has been clicked before
-				button.addEventListener('click', () => {
-					if (button.querySelector('.did_select')) {
-						button.style.cursor = 'not-allowed';
-						button.style.pointerEvents = 'none';
-					}
-				});
+				// Set up the MutationObserver for the counter element
+				createObserver(counter, button);
 			}
 		}
 	}
