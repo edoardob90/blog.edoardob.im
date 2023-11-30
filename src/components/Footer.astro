@@ -1,10 +1,4 @@
 ---
-interface Props {
-	enableAnalytics?: boolean;
-}
-
-const { enableAnalytics = false } = Astro.props;
-
 const today = new Date();
 ---
 
@@ -18,5 +12,3 @@ const today = new Date();
 		@apply inline-block mt-0 mr-1 mb-0 ml-0;
 	}
 </style>
-
-{enableAnalytics && <script>console.log('Analytics enabled');</script>}

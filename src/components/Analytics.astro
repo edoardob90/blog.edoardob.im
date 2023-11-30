@@ -1,6 +1,10 @@
-<ul class='reply-buttons mt-16 p-0 list-none'>
-	<li class='inline mr-2'><button class='tinylytics_kudos'>Kudos</button></li>
-</ul>
+---
+interface Props {
+	kudosEmoji?: string;
+}
+
+const { kudosEmoji = '❤️' } = Astro.props;
+---
 
 <style>
 	button {
@@ -11,3 +15,33 @@
 		@apply opacity-50 cursor-not-allowed hover:bg-inherit;
 	}
 </style>
+
+<ul class='reply-buttons mt-16 p-0 list-none'>
+	<li class='inline mr-2'>
+		<astro-kudos data-kudos={kudosEmoji}>
+			<button class='tinylytics_kudos'>Kudos</button>
+		</astro-kudos>
+	</li>
+</ul>
+
+<script>
+	class AstroKudos extends HTMLElement {
+		constructor() {
+			super();
+
+			// Read the data attribute.
+			const kudosEmoji = this.dataset.kudos;
+
+			// Load the external script.
+			const script = document.createElement('script');
+			script.type = 'text/javascript';
+			script.defer = true;
+			script.src = `https://tinylytics.app/embed/rmUzaKmqQxZxaED2xrNP.js?kudos=${kudosEmoji}`;
+
+			// Append the script to the body.
+			document.body.appendChild(script);
+		}
+	}
+
+	customElements.define('astro-kudos', AstroKudos);
+</script>

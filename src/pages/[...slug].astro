@@ -27,7 +27,6 @@ export async function getStaticPaths() {
 	}));
 }
 
-const enableAnalytics = true;
 const post = Astro.props;
 const { title, written, updated, tags } = post.data;
 const { Content } = await post.render();
@@ -53,7 +52,7 @@ const { Content } = await post.render();
 	}
 </style>
 
-<Layout title={title} page='Post' enableAnalytics={enableAnalytics}>
+<Layout title={title} page='Post'>
 	<div class='mx-0 my-8'>
 		<h1 class='text-2xl font-headline font-bold'>
 			{title}
@@ -75,5 +74,5 @@ const { Content } = await post.render();
 	<article role='article'>
 		<Content />
 	</article>
-	{enableAnalytics && <Analytics />}
+	<Analytics />
 </Layout>
