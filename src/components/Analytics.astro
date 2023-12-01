@@ -25,9 +25,7 @@ const { kudosIcon = 'heart' } = Astro.props;
 <ul class='reply-buttons mt-16 p-0 list-none'>
 	<li class='inline mr-2'>
 		<astro-kudos data-kudos={kudosIcon}>
-			<button class='flex flex-row items-center tinylytics_kudos'>
-				<i class='kudos-icon' data-lucide={kudosIcon}></i>
-			</button>
+			<button class='flex flex-row items-center tinylytics_kudos'></button>
 		</astro-kudos>
 	</li>
 </ul>
@@ -35,54 +33,56 @@ const { kudosIcon = 'heart' } = Astro.props;
 <script>
 	import { createIcons, icons } from 'lucide';
 
+	// Load the external script
+	const script = document.createElement('script');
+	script.type = 'text/javascript';
+	script.defer = true;
+	script.src = 'https://tinylytics.app/embed/rmUzaKmqQxZxaED2xrNP.js?kudos=custom';
+
+	// Append the script to the body
+	document.body.appendChild(script);
+
 	class AstroKudos extends HTMLElement {
 		constructor() {
 			super();
 
-			// Read the data attribute.
+			// Read the data attribute
 			const kudosIcon = this.dataset.kudos;
 
-			// Load the external script.
-			const script = document.createElement('script');
-			script.type = 'text/javascript';
-			script.defer = true;
-			script.src = 'https://tinylytics.app/embed/rmUzaKmqQxZxaED2xrNP.js?kudos=custom';
-
-			// Append the script to the body.
-			document.body.appendChild(script);
-
-			// Functions for the MutationObserver
-			const insertIconElement = (targetElement: HTMLElement): void => {
-				// Create the icon element if it doesn't exist
-				if (!targetElement.querySelector('.kudos-icon')) {
+			// Set up the observer for the button
+			const insertIconElement = (element: HTMLElement): void => {
+				if (!element.querySelector('.kudos_icon')) {
 					const icon = document.createElement('i');
-					icon.className = 'kudos-icon';
+					icon.className = 'kudos_icon';
 					icon.classList.add('ml-1');
 					icon.dataset.lucide = kudosIcon;
-					targetElement.insertAdjacentElement('beforeend', icon);
+					element.insertAdjacentElement('beforeend', icon);
 					createIcons({ icons });
 				}
 			};
 
-			const createObserver = (targetElement: HTMLElement): void => {
+			const createObserver = (element: HTMLElement): void => {
 				const observer = new MutationObserver((mutations: MutationRecord[]) => {
 					mutations.forEach((mutation: MutationRecord) => {
-						if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+						if (
+							mutation.type === 'childList' ||
+							(mutation.type === 'attributes' && mutation.attributeName === 'class')
+						) {
 							// Insert the icon if it doesn't exist
-							insertIconElement(targetElement);
+							insertIconElement(element);
+
 							// Disable the button if it has been clicked
-							if (targetElement.classList.contains('did_select')) {
-								targetElement.style.cursor = 'not-allowed';
-								targetElement.style.pointerEvents = 'none';
+							if (element.classList.contains('did_select')) {
+								element.style.cursor = 'not-allowed';
+								element.style.pointerEvents = 'none';
 							}
 						}
 					});
 				});
 
-				observer.observe(targetElement, { attributes: true });
+				observer.observe(element, { childList: true, attributes: true });
 			};
 
-			// Observer for the button
 			const button = this.querySelector('button');
 			if (button) {
 				createObserver(button);
