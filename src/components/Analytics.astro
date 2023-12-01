@@ -52,24 +52,26 @@ const { kudosIcon = 'heart' } = Astro.props;
 			document.body.appendChild(script);
 
 			// Functions for the MutationObserver
-			const insertCustomIcon = (button: HTMLButtonElement): void => {
+			const insertIconElement = (targetElement: HTMLElement): void => {
 				// Create the icon element if it doesn't exist
-				if (!button.querySelector('.kudos-icon')) {
+				if (!targetElement.querySelector('.kudos-icon')) {
 					const icon = document.createElement('i');
 					icon.className = 'kudos-icon';
 					icon.classList.add('ml-1');
 					icon.dataset.lucide = kudosIcon;
-					button.insertAdjacentElement('beforeend', icon);
+					targetElement.insertAdjacentElement('beforeend', icon);
 					createIcons({ icons });
 				}
 			};
 
-			const createObserver = (targetElement: HTMLButtonElement): void => {
+			const createObserver = (targetElement: HTMLElement): void => {
 				const observer = new MutationObserver((mutations: MutationRecord[]) => {
 					mutations.forEach((mutation: MutationRecord) => {
 						if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+							// Insert the icon if it doesn't exist
+							insertIconElement(targetElement);
+							// Disable the button if it has been clicked
 							if (targetElement.classList.contains('did_select')) {
-								insertCustomIcon(targetElement);
 								targetElement.style.cursor = 'not-allowed';
 								targetElement.style.pointerEvents = 'none';
 							}
