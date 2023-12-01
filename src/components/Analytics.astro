@@ -25,7 +25,9 @@ const { kudosIcon = 'heart' } = Astro.props;
 <ul class='reply-buttons mt-16 p-0 list-none'>
 	<li class='inline mr-2'>
 		<astro-kudos data-kudos={kudosIcon}>
-			<button class='flex flex-row items-center'></button>
+			<button class='flex flex-row items-center tinylytics_kudos'>
+				<i class='kudos-icon' data-lucide={kudosIcon}></i>
+			</button>
 		</astro-kudos>
 	</li>
 </ul>
@@ -50,18 +52,27 @@ const { kudosIcon = 'heart' } = Astro.props;
 			document.body.appendChild(script);
 
 			// Functions for the MutationObserver
-			const handleClassChange = (element: HTMLElement, button: HTMLButtonElement): void => {
-				if (element.classList.contains('did_select')) {
-					button.style.cursor = 'not-allowed';
-					button.style.pointerEvents = 'none';
+			const insertCustomIcon = (button: HTMLButtonElement): void => {
+				// Create the icon element if it doesn't exist
+				if (!button.querySelector('.kudos-icon')) {
+					const icon = document.createElement('i');
+					icon.className = 'kudos-icon';
+					icon.classList.add('ml-1');
+					icon.dataset.lucide = kudosIcon;
+					button.insertAdjacentElement('beforeend', icon);
+					createIcons({ icons });
 				}
 			};
 
-			const createObserver = (targetElement: HTMLElement, button: HTMLButtonElement): void => {
+			const createObserver = (targetElement: HTMLButtonElement): void => {
 				const observer = new MutationObserver((mutations: MutationRecord[]) => {
 					mutations.forEach((mutation: MutationRecord) => {
 						if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-							handleClassChange(targetElement, button);
+							if (targetElement.classList.contains('did_select')) {
+								insertCustomIcon(targetElement);
+								targetElement.style.cursor = 'not-allowed';
+								targetElement.style.pointerEvents = 'none';
+							}
 						}
 					});
 				});
@@ -69,24 +80,10 @@ const { kudosIcon = 'heart' } = Astro.props;
 				observer.observe(targetElement, { attributes: true });
 			};
 
-			// Create a button element.
+			// Observer for the button
 			const button = this.querySelector('button');
-
 			if (button) {
-				// Create the counter element
-				const counter = document.createElement('span');
-				counter.className = 'tinylytics_kudos';
-				counter.classList.add('mr-1');
-				button.appendChild(counter);
-
-				// Create the icon element
-				const icon = document.createElement('i');
-				icon.className = 'kudos-icon';
-				icon.dataset.lucide = kudosIcon;
-				button.appendChild(icon);
-
-				// Set up the MutationObserver for the counter element
-				createObserver(counter, button);
+				createObserver(button);
 			}
 		}
 	}
