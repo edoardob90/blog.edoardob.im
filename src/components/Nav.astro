@@ -24,11 +24,11 @@ const { page } = Astro.props;
 	<ul class='m-0 p-0 list-none flex grow justify-end gap-4 font-headline font-bold'>
 		{
 			NAV_ITEMS.filter((item) => item.show).map((item) => (
-				<li>
+				<li class='flex flex-row items-center'>
 					<a href={item.path}>
 						<i data-lucide={item.icon} class='inline-block' aria-label={item.label} />
 					</a>
-					<span class:list={{ hidden: page !== item.label, 'inline-block': true }}>
+					<span class:list={{ hidden: page !== item.label, 'inline-block ml-1': true }}>
 						{item.label}
 					</span>
 				</li>
