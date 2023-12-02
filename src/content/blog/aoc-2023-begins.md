@@ -3,7 +3,7 @@ title: 'It’s the end, again. Why am I happy about it?'
 description: 'Advent of Code 2023 begins'
 written: 2023-11-30T23:58:26+01:00
 tags:
-  - 'aoc'
+  - 'aoc23'
 draft: false
 ---
 

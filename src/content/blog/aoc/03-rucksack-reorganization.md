@@ -1,7 +1,7 @@
 ---
 description: '🎄👨‍💻 Day 3: Rucksack Reorganization'
 tags:
-  - aoc
+  - aoc22
 title: '🎄👨‍💻 Day 3: Rucksack Reorganization'
 written: 2022-12-03 20:35:50 +0000
 slug: aoc22-03

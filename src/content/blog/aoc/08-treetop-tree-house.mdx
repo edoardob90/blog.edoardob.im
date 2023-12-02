@@ -1,9 +1,8 @@
 ---
-description: "🎄👨‍💻 Day 8: Treetop Tree House"
+description: '🎄👨‍💻 Day 8: Treetop Tree House'
 tags:
-  
-  - aoc
-title: "🎄👨‍💻 Day 8: Treetop Tree House"
+  - aoc22
+title: '🎄👨‍💻 Day 8: Treetop Tree House'
 slug: aoc22-08
 written: 2022-12-08 22:40:08 +0000
 ---
@@ -18,7 +17,7 @@ Eric keeps raising the bar with a problem that made me disown Python because oth
 
 The Elves' project is to build a cozy treetop house. It is not clear how much time they have for this expedition, but so be it. The vast forest in which they find themselves covers a fairly regular area, and the Elves are able to reconstruct a two-dimensional map of it in which each tree is represented by its height[^1], from 0, the lowest height they have been able to measure, to 9.
 
-[^1]: A perfect representation of a [field](https://en.wikipedia.org/wiki/Field_(physics)) in physics. Inevitable note because the writer is proud of his scientific background, although he likes a lot computer science stuff.
+[^1]: A perfect representation of a [field](<https://en.wikipedia.org/wiki/Field_(physics)>) in physics. Inevitable note because the writer is proud of his scientific background, although he likes a lot computer science stuff.
 
 The Elves first want to determine where it would be ideal to build the tree house. They need to find the most hidden location possible. They ask us to determine how many trees are visible to an observer outside the forest. A tree is visible if all other trees between it and the forest boundaries are shorter than it. It's clear that all trees at the edges of the forest will always be visible, so we can already discard them as possible candidates (but we will come back to this in Part 2).
 
@@ -136,15 +135,15 @@ The last bit, `Flatten /* Apply[Times]`, is just multiplying the resulting 4 val
 
 ### Bonus: maps
 
-<Figure 
-  imgSrc={TreetopMap1}
-  alt="Forest map example"
-  caption="An array plot of the example forest. It's easy to spot the tree with the best scenic score."
-  format="jpeg"
+<Figure
+	imgSrc={TreetopMap1}
+	alt='Forest map example'
+	caption="An array plot of the example forest. It's easy to spot the tree with the best scenic score."
+	format='jpeg'
 />
 
 <Figure
-  imgSrc={TreetopMap2}
-  alt="Forest map of my input"
-  caption="The forest map of my input. I had to change the color function to make more visible the tree with the highest scenic score: the small dot on the right side near the edge, in a dark-red color."
+	imgSrc={TreetopMap2}
+	alt='Forest map of my input'
+	caption='The forest map of my input. I had to change the color function to make more visible the tree with the highest scenic score: the small dot on the right side near the edge, in a dark-red color.'
 />

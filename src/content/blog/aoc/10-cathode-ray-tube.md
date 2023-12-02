@@ -1,7 +1,7 @@
 ---
 description: '🎄👨‍💻 Day 10: Cathode-Ray Tube'
 tags:
-  - aoc
+  - aoc22
 title: '🎄👨‍💻 Day 10: Cathode-Ray Tube'
 written: 2022-12-10 00:00:00 +0000
 slug: aoc22-10

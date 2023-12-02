@@ -1,7 +1,7 @@
 ---
 description: '🎄👨‍💻 Day 7: No Space Left On Device'
 tags:
-  - aoc
+  - aoc22
 title: '🎄👨‍💻 Day 7: No Space Left On Device'
 written: 2022-12-07 22:21:24 +0000
 slug: aoc22-07

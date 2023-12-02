@@ -1,7 +1,7 @@
 ---
 description: '🎄👨‍💻 Day 14: Regolith Reservoir'
 tags:
-  - aoc
+  - aoc22
 title: '🎄👨‍💻 Day 14: Regolith Reservoir'
 written: 2022-12-14 13:31:00 +0000
 slug: aoc22-14

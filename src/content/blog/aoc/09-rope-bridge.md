@@ -1,7 +1,7 @@
 ---
 description: '🎄👨‍💻 Day 9: Rope Bridge'
 tags:
-  - aoc
+  - aoc22
 title: '🎄👨‍💻 Day 9: Rope Bridge'
 written: 2022-12-09 18:08:39 +0000
 slug: aoc22-09

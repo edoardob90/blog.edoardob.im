@@ -1,7 +1,7 @@
 ---
 description: '🎄👨‍💻 Day 6: Tuning Trouble'
 tags:
-  - aoc
+  - aoc22
 title: '🎄👨‍💻 Day 6: Tuning Trouble'
 written: 2022-12-06 15:30:13 +0000
 slug: ao22-06
