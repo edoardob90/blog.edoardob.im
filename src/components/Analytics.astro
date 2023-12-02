@@ -1,0 +1,90 @@
+<style>
+	button {
+		@apply font-sans text-lg md:text-xl rounded-md py-1 px-2 hover:bg-red-100 hover:dark:bg-slate-600;
+	}
+</style>
+
+<style is:global>
+	.did_select {
+		@apply opacity-50;
+	}
+
+	.did_select + .kudos-icon {
+		@apply opacity-50 fill-current;
+	}
+</style>
+
+<ul class='reply-buttons mt-16 p-0 list-none'>
+	<li class='inline mr-2'>
+		<button class='flex flex-row items-center tinylytics_kudos'></button>
+	</li>
+</ul>
+
+<script>
+	import { createIcons, Heart, ThumbsUp, Flame, PartyPopper, Star } from 'lucide';
+	createIcons({
+		icons: {
+			Heart,
+			ThumbsUp,
+			Flame,
+			PartyPopper,
+			Star,
+		},
+	});
+
+	// Load the external script
+	const script = document.createElement('script');
+	script.type = 'text/javascript';
+	script.defer = true;
+	script.src = 'https://tinylytics.app/embed/RUzKsnUx1PqGxzpZUSSA.js?kudos=custom';
+
+	// Append the script to the body
+	document.body.appendChild(script);
+
+	// Set up the observer for the button
+	const insertIconElement = (element: HTMLElement): void => {
+		if (!element.querySelector('.kudos_icon')) {
+			const icon = document.createElement('i');
+			icon.className = 'kudos_icon';
+			icon.classList.add('ml-1');
+			icon.dataset.lucide = 'heart'; // or thumbs-up, flame, party-popper, star
+			element.insertAdjacentElement('beforeend', icon);
+			createIcons({
+				icons: {
+					Heart,
+					ThumbsUp,
+					Flame,
+					PartyPopper,
+					Star,
+				},
+			});
+		}
+	};
+
+	const createObserver = (element: HTMLElement): void => {
+		const observer = new MutationObserver((mutations: MutationRecord[]) => {
+			mutations.forEach((mutation: MutationRecord) => {
+				if (
+					mutation.type === 'childList' ||
+					(mutation.type === 'attributes' && mutation.attributeName === 'class')
+				) {
+					// Insert the icon if it doesn't exist
+					insertIconElement(element);
+
+					// Disable the button if it has been clicked
+					if (element.classList.contains('did_select')) {
+						element.style.cursor = 'not-allowed';
+						element.style.pointerEvents = 'none';
+					}
+				}
+			});
+		});
+
+		observer.observe(element, { childList: true, attributes: true });
+	};
+
+	const button = document.querySelector('button.tinylytics_kudos');
+	if (button) {
+		createObserver(button as HTMLElement);
+	}
+</script>
