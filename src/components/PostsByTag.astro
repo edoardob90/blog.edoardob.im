@@ -16,6 +16,7 @@ type Tags = {
 
 const tags: Tags[] = [];
 
+// Group posts by tag
 const uniqueTags = getUniqueTags(posts);
 uniqueTags.forEach((tag) => {
 	const postsWithTag = getPostsWithTag(posts, tag, true);
@@ -24,6 +25,9 @@ uniqueTags.forEach((tag) => {
 		posts: postsWithTag,
 	});
 });
+
+// Sort tags by the date of the most recent post
+tags.sort((a, b) => b.posts[0].data.written.getTime() - a.posts[0].data.written.getTime());
 ---
 
 <div>
