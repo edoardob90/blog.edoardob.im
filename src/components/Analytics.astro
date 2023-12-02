@@ -16,7 +16,7 @@
 
 <ul class='reply-buttons mt-16 p-0 list-none'>
 	<li class='inline mr-2'>
-		<button class='flex flex-row items-center tinylytics_kudos'></button>
+		<button class='flex flex-row items-center tinylytics_kudos' aria-label='Kudos button'></button>
 	</li>
 </ul>
 
@@ -48,6 +48,7 @@
 			icon.className = 'kudos_icon';
 			icon.classList.add('ml-1');
 			icon.dataset.lucide = 'heart'; // or thumbs-up, flame, party-popper, star
+			icon.ariaLabel = 'Kudos icon';
 			element.insertAdjacentElement('beforeend', icon);
 			createIcons({
 				icons: {

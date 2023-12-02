@@ -26,7 +26,7 @@ const { page } = Astro.props;
 			NAV_ITEMS.filter((item) => item.show).map((item) => (
 				<li>
 					<a href={item.path}>
-						<i data-lucide={item.icon} class='inline-block' />
+						<i data-lucide={item.icon} class='inline-block' aria-label={item.label} />
 					</a>
 					<span class:list={{ hidden: page !== item.label, 'inline-block': true }}>
 						{item.label}
