@@ -1,7 +1,7 @@
 ---
 description: '🎄👨‍💻 Day 1: Calorie Counting'
 tags:
-  - aoc
+  - aoc22
 title: '🎄👨‍💻 Day 1: Calorie Counting'
 written: 2022-12-01 22:19:25 +0000
 slug: aoc22-01

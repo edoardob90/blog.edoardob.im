@@ -1,7 +1,7 @@
 ---
 description: '🎄👨‍💻 Day 4: Camp Cleanup'
 tags:
-  - aoc
+  - aoc22
 title: '🎄👨‍💻 Day 4: Camp Cleanup'
 written: 2022-12-04 15:35:07 +0000
 slug: aoc22-04

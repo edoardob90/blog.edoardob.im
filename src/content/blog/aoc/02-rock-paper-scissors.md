@@ -1,7 +1,7 @@
 ---
 description: '🎄👨‍💻 Day 2: Rock Paper Scissors'
 tags:
-  - aoc
+  - aoc22
 title: '🎄👨‍💻 Day 2: Rock Paper Scissors'
 written: 2022-12-02 21:54:21 +0000
 slug: aoc22-02

@@ -4,7 +4,7 @@ description: 'Monkeys can be nasty when playing with them.'
 slug: aoc22-11
 written: 'Dec 12 2022'
 tags:
-  - aoc
+  - aoc22
 ---
 
 It wasn't enough to have risked our lives by falling off a rope bridge into the river flowing in the gorge below. Now we met a group of nasty monkeys who are taunting us by throwing the stuff from our backpack. As we try to figure out how to intervene, we are quite apprehensive about our belongings and assign a certain worry level to each item. The monkeys handle each object a bit and then throw it at each other based on how they see us worrying. Each monkey may show a different interest in our objects, and its actions may increase our worry level a little or a lot.

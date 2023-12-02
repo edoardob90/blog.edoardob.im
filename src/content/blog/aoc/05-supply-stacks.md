@@ -1,7 +1,7 @@
 ---
 description: '🎄👨‍💻 Day 5: Supply Stacks'
 tags:
-  - aoc
+  - aoc22
 title: '🎄👨‍💻 Day 5: Supply Stacks'
 written: 2022-12-05 22:10:11 +0000
 slug: aoc22-05
