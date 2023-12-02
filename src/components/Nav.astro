@@ -44,6 +44,13 @@ const { page } = Astro.props;
 </style>
 
 <script>
-	import { createIcons, icons } from 'lucide';
-	createIcons({ icons });
+	import { createIcons, Tent, Rss, CircleUser, Tags } from 'lucide';
+	createIcons({
+		icons: {
+			Tent,
+			Rss,
+			CircleUser,
+			Tags,
+		},
+	});
 </script>
