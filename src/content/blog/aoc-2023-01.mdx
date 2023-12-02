@@ -8,7 +8,9 @@ tags:
 slug: aoc23-01
 ---
 
-We are all well aware (or should be) of the biggest global problem humanity has ever faced-namely, the climate crisis. And it seems that Advent of Code wants to align as well: the excuse for this year's _adventure_ is a problem with the global snow production system. Well, what should we do?
+import MarginNote from '@/components/MarginNote.astro';
+
+We are all well aware (or should be) of the biggest problem humanity has ever faced: the global climate crisis. And it seems that Advent of Code wants to align as well: the excuse for this year's _adventure_ is a problem with the global snow production system. Well, what should we do?
 
 The input is a calibration document that has been amended in a very creative way: it should contain only numbers, but some of them are spelled out with letters.
 
@@ -19,17 +21,15 @@ a1b2c3d4e5f
 treb7uchet
 ```
 
-The first task is relatively simple: for each row, we must reconstruct the number consisting of the **first and last** digits found on that row. So, in the example: `12`, `15`, `77`. The last number is repeated because the first and last digits coincide.
+The first task is relatively simple: for each row, we must reconstruct the number consisting of the **first and last** digits found on that row. So, in the example: `12`, `38`, `15`, `77`. The last number is repeated because the first and last digits coincide.
 
-It’s a one-liner without too much fuss:
+It’s a one-liner without too much fuss <MarginNote text="By `dayN` I will henceforth denote the raw input of a given day, as it can be downloaded from Advent of Code website." />:
 
 ```wolfram
 #[[{1, -1}]]& /* FromDigits /@
   StringCases[StringSplit[day1, "\n"],
    x: DigitCharacter :> ToExpression@x] // Total
 ```
-
-**Note:** By `dayN` I will henceforth denote the raw input of a given day – that is, as it can be downloaded from the Advent of Code.
 
 Steps:
 
@@ -40,7 +40,7 @@ Steps:
    3. The last bit is the map operator `/@`.
 3. Lastly, we compute the total of the reconstructed numbers.
 
-## Part 2
+### Part 2
 
 Obviously, something is wrong; it cannot be that simple. We also have to consider the digits 0 to 9 written **in letters**. And we have to consider **all of them**. What does that mean? For example, `oneight` is `18`. We cannot simply replace `one → 1`, `two → 2`, etc. because we would miss the adjacent overlapping digits.
 
