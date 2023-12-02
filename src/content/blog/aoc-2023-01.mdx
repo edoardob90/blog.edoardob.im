@@ -36,7 +36,7 @@ Steps:
 1. The `StringCases[..., x: DigitCharacter :> ToExpression@x]` is doing the extraction part: any digit character (0-9) is converted into an expression – that is, an integer, in this case. The result will be a list in which each element contains the digits found on a certain row.
 2. `#[[{1, -1}]]& /* FromDigits /@` it’s a **single** function mapped onto the list of lists obtained above. The symbol `/*` is the _right composition_ operator. It means that its right operand will be applied on the result obtained after applying its left operand.
    1. `#[[{1, -1}]]&` takes the first and last elements. If it’s a single item list, it takes the element twice.
-   2. `FromDigits` prende una lista di cifre e costruisce un intero in base 10 (default).
+   2. `FromDigits` constructs an integer from the list of its decimal digits.
    3. The last bit is the map operator `/@`.
 3. Lastly, we compute the total of the reconstructed numbers.
 
