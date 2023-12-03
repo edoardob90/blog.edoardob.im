@@ -55,7 +55,7 @@ checkDigit[grid_, {i_, j_}] :=
  ]
 ```
 
-Adesso arriva la parte davvero complicata, quella su cui mi sono bloccato perché qualcosa non funziona come previsto (presumibilmente il calcolo dei vicini). O forse perché il Wolfram Language mi costringe a evitare un approccio più procedurale che spesso è più semplice perché comporta operazioni più elementari.
+Adesso arriva la parte davvero complicata, quella su cui mi sono bloccato perché qualcosa non funziona come previsto (presumibilmente il calcolo dei vicini). O forse perché il Wolfram Language mi costringe a evitare un approccio più procedurale, spesso più semplice perché comporta operazioni più elementari.
 
 L’idea che ho avuto si articola così:
 
@@ -67,7 +67,7 @@ L’idea che ho avuto si articola così:
 
 Ho provato a debuggare il mio codice con un altro (scritto in Python) che produce il risultato corretto. Ho notato due cose:
 
-1. La mia lista di numeri validi ne includi alcuni che non lo possono essere perché, per esempio, circondati da punti.
+1. La mia lista di numeri validi ne include alcuni che non lo possono essere perché, per esempio, circondati solo da punti.
 2. Alcuni numeri vengono contati più del necessario. Come faccio a saperlo? Ho eliminato dal mio set di numeri quelli sicuramente corretti, e ho calcolato la somma dei restanti. Se i numeri fossero contati tutti correttamente, questa somma **deve coincidere** con la differenza dei totali dei due set. Cioè:
 
 ```wolfram
