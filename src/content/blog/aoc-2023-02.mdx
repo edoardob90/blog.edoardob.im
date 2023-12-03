@@ -1,0 +1,131 @@
+---
+title: '🎅🏻🎄 Day 2: Cube Conundrum ⭐⭐'
+description: 'Playing with colored cubes'
+written: 2023-12-02T13:15:04+01:00
+tags:
+  - 'aoc23'
+  - 'wolfram'
+slug: aoc23-day2
+---
+
+import MarginNote from '@/components/MarginNote.astro';
+
+
+Per rimanere in tema con l’emergenza climatica, il problema con la neve sembra essere una mancanza d’acqua. Così ci racconta un Elfo. Si offre anche di mostrarci dove sta il problema, anche se non sa proprio come risolverlo (immagino toccherà a noi uno dei prossimi giorni).
+
+Mentre ci accompagna, propone un gioco. In un sacchetto ci sono dei cubi di tre colori: rosso, verde, e blu. Ogni round di questo gioco consiste nell’estrarre un numero random di cubi e prendere nota del colore. I cubi vengono poi rimessi nel sacchetto e l’operazione si ripete più volte per ogni round.
+
+Un possibile risultato è
+
+```
+Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
+Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
+Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
+Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
+Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
+```
+
+L’input suggerisce perciò che avremo a che fare con *hash maps* (o `Association` nel Wolfram Language). Ogni colore sarà associato a quante volte quel cubo è comparso in un’estrazione.
+
+Prima domanda del nostro accompagnatore: *se avessimo un certo numero di cubi rossi-verdi-blu, quali dei round dell’input sarebbero stati possibili?*
+
+Per esempio, con 12 cubi rossi, 13 verdi, e 14 blu, il terzo e il quarto game **non sarebbero possibili**: nel Game 3 avremmo estratto 20 cubi rossi (ne abbiamo 12), mentre nel 4 avremmo avuto bisogno di 15 cubi blu (e 14 rossi).
+
+Il nostro amico vuole che **sommiamo** gli indici dei round plausibili. Nell’esempio: $1 + 2 + 5 = 8$.
+
+#### Parsing
+
+Il parsing deve estrarre il game e la sua lista di set (cioè i gruppi di cubi che vengono pescati) e poi i risultati di ogni singolo set. Il `Game 1` sarà un'association del tipo:
+
+```wolfram
+<|1 -> {<|"blue" -> 3, "red" -> 4|>, <|"red" -> 1, "green" -> 2, 
+    "blue" -> 6|>, <|"green" -> 2|>}|>
+``` 
+
+Quindi:
+
+```wolfram
+parseGame[input_String] := 
+ Join @@ Flatten @
+   StringCases[StringSplit[input, "\n"], 
+    Shortest[__] ~~ num: DigitCharacter.. ~~ ":" ~~ sets__ :> <|
+      ToExpression@num -> parseSet@sets|>]
+```
+
+E la funzione `parseSet` è
+
+```wolfram
+parseSet[s_String] := 
+ Association /@ 
+  StringCases[StringSplit[s, ";"], 
+   num: NumberString ~~ Shortest[__] ~~ 
+   color: LetterCharacter.. :>
+     color -> numberParse@num]
+```
+
+I dettagli più importanti per un parsing corretto sono i due `Shortest[__]`. Letteralmente significa “il più corto pattern di qualunque cosa”. Dimenticarsene significa ignorare qualunque game il cui ID contiene più di una cifra. Infatti, senza `Shortest`, `Game 10` verrebbe estratto come `0`, oppure `Game 11` come `1`. E poiché in una hash map le chiavi non si possono ripetere, sovrascriveremmo continuamente dei dati. Disastro totale!
+
+#### Finding the valid games
+
+Ora arriva la parte interessante, ma in realtà molto meno difficile di quanto sembra. Come controlliamo che un certo set soddisfa il constraint <MarginNote text="Il constraint scritto come una `Association` diventa `<| 'red' -> 12, 'green' -> 13, 'blue' -> 14 |>`." /> iniziale?
+
+```wolfram
+selectValidGames[games_Association, constraint_Association] :=
+   Select[games,
+   sets |-> AllTrue[sets, 
+    AllTrue[
+      Merge[{constraint, #}, Fold[Subtract, #]& ], 
+      # >= 0 &
+      ]&
+    ]
+  ]
+```
+
+Per ogni game, dobbiamo assicurarci che ogni set soddisfa il constraint, cioè che non abbiamo estratto più cubi di un certo colore di quelli disponibili.
+
+La parte più interna:
+
+```wolfram
+AllTrue[
+      Merge[{constraint, #}, Fold[Subtract, #]& ], 
+      # >= 0 &
+      ]
+```
+
+Qui `#` rappresenta un singolo set. `Merge` combina due diverse `Association` applicando una certa operazione agli elementi con la stessa chiave. In questo caso, l’operazione è `Fold[Subtract, #] &` che semplicemente fa la differenza degli elementi successivi di una lista:
+
+```wolfram
+Fold[Subtract, {a, b, c}]   (* a - b - c - d *)
+```
+
+Quindi: prendiamo il constraint e un certo set e calcoliamo le differenze del numero di cubi di un certo colore.
+
+La parte più esterna con `AllTrue` ritorna `True` se tutte queste differenze sono maggiori di zero. Semplice. Se in queste differenze c’è un numero negativo, significa che quel set è impossibile dato il constraint. Questo check è applicato a **tutti** i set, e `AllTrue` più esterno controlla proprio che tutti i set soddisfino il criterio. Fine.
+
+Soluzione della prima parte:
+
+```wolfram
+With[{constraint = 
+   Association["red" -> 12, "green" -> 13, "blue" -> 14]},
+ Total@Keys@selectValidGames[parseGame[day2], constraint]
+ ]
+```
+
+### Part 2
+
+A questo punto il constraint non è più dato, ma dobbiamo trovarlo noi. Dobbiamo trovare il numero **minimo** di cubi di ogni colore che sarebbero sufficienti per rendere plausibile un game. In sostanza, si tratta di trovare il massimo numero di cubi di un certo colore: quelli sono i cubi di cui avremo bisogno.
+
+Relativamente semplice, anzi, molto:
+
+```wolfram
+Total@Map[
+  Values /* Apply[Times],
+  Merge[#, Max] & /@ parseGame[day2]
+  ]
+```
+
+Qui l’operazione di merge è `Max`: prendiamo il massimo dei cubi rossi, verdi, e blu che compaiono in tutti i set di un game. E fine anche qui.
+
+---
+
+Cercherò di mantenere aggiornato [questo notebook pubblico](https://www.wolframcloud.com/obj/edoardob90/Published/AdventOfCode2023.nb) con le soluzioni che riesco a ottenere.
