@@ -1,0 +1,81 @@
+---
+title: "🎅🏻🎄 Day 3: Gear Ratios"
+description: No gear today.
+written: 2023-12-03T23:34:00+01:00
+tags:
+  - "aoc23"
+  - "wolfram"
+slug: aoc23-day3
+---
+
+import MarginNote from '@/components/MarginNote.astro';
+
+Fine dei giochi. O meglio: eccoci al primo problema che ha arrestato il mio *momentum* di questo 2023. Mi tocca già lasciare indietro un problema – non lo risolverò certo entro oggi – perché il *grid parsing* fa parte di quelle categorie dove faccio spesso fatica.
+
+In sintesi, il problema ci chiede di estrarre dei numeri da una griglia bidimensionale. Per esempio:
+
+```
+467..114..
+...*......
+..35..633.
+......#...
+617*......
+.....+.58.
+..592.....
+......755.
+...$.*....
+.664.598..
+```
+
+Quali numeri? Solo quelli le cui cifre **non** sono adiacenti a un simbolo, cioè un carattere che non sia un numero o un punto.  Nota importante: con *adiacente* s’intendono anche le diagonali, non soltanto lungo gli assi cartesiani. Ogni cifra avrà quindi **8 location** da controllare.
+
+Per prima cosa, quindi, dobbiamo determinare quali siano i vicini di ciascuna cifra. Per ogni posizione `{i, j}`, abbiamo la seguente funzione che fa il *lavoro sporco*:
+
+```wolfram
+neighbors[grid_, {i_, j_}] := 
+Block[{d = Dimensions@grid, xb, yb},
+  {xb, yb} = {i, j} + {{-1, 1}, {-1, 1}};
+  Take[grid, 
+   Sequence @@ {Clip[xb, {1, d[[1]]}], Clip[yb, {1, d[[2]]}]}
+   ]
+]
+```
+
+La parte su cui stare attenti è `{Clip[ xb, {1, d[[1]]} ], Clip[ yb, {1, d[[2]]} ]}`: dobbiamo evitare di andare oltre i limiti orizzontali e verticali della griglia. Una cifra in uno dei quattro vertici avrà solo 3 punti vicini, mentre una cifra lungo uno spigolo ne avrà 8.
+
+A questo punto dobbiamo determinare se una certa posizione `{i, j}` è circondata da almeno un simbolo. Perciò:
+
+```wolfram
+checkDigit[grid_, {i_, j_}] :=
+ Block[{nb = neighbors[grid, {i, j}]},
+  AnyTrue[
+	  Flatten@nb,
+	  !StringMatchQ[#, "." | DigitCharacter..]&
+  ]
+ ]
+```
+
+Adesso arriva la parte davvero complicata, quella su cui mi sono bloccato perché qualcosa non funziona come previsto (presumibilmente il calcolo dei vicini). O forse perché il Wolfram Language mi costringe a evitare un approccio più procedurale che spesso è più semplice perché comporta operazioni più elementari.
+
+L’idea che ho avuto si articola così:
+
+1. Scorro l’input riga per riga, tenendo traccia dell’indice di riga <MarginNote text="Gli indici degli array in Wolfram partono da 1, non da 0. È una scelta coerente con uno degli aspetti più profondi del linguaggio, magari ne discuterò più avanti." />.
+2. In ogni riga, estraggo le cifre numeriche e le loro posizioni, che saranno anche le coordinate lungo l’asse delle colonne.
+3. Con l’indice di riga a portata di mano, costruisco le posizioni `{i, j}` sulla griglia che corrispondono alle singole cifre di ogni numero incontrato. Esempio dalla griglia riportata sopra: 467 ha indici colonna da 1 a 3, più l’indice di riga 1. Le posizioni di cui controllare i vicini saranno: `{{1, 1}, {1, 2}, {1, 3}}`.
+4. Se almeno una delle posizioni occupate dalle cifre di un numero contengono un simbolo nelle posizioni adiacenti, allora il numero è valido.
+5. Alla fine, si sommano tutti i numeri validi.
+
+Ho provato a debuggare il mio codice con un altro (scritto in Python) che produce il risultato corretto. Ho notato due cose:
+
+1. La mia lista di numeri validi ne includi alcuni che non lo possono essere perché, per esempio, circondati da punti.
+2. Alcuni numeri vengono contati più del necessario. Come faccio a saperlo? Ho eliminato dal mio set di numeri quelli sicuramente corretti, e ho calcolato la somma dei restanti. Se i numeri fossero contati tutti correttamente, questa somma **deve coincidere** con la differenza dei totali dei due set. Cioè:
+
+```wolfram
+Total @ Complement[wrong, correct] === Subtract @@ (Total /@ {wrong, correct})
+```
+
+E questi due numeri **non sono uguali** nel mio caso. Quindi, per qualche ragione, sto considerando qualche numero più volte del necessario.
+
+---
+
+Il mio Day 3 finisce qui. Non ho insistito troppo con il debugging perché non avevo troppe idee su che cosa potesse non funzionare. Ho preferito invece scrivere un resoconto di quello che ho tentato. Mi servirà quando ci ritornerò.
