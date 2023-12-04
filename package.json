@@ -19,7 +19,7 @@
     "astro": "^3.6.4",
     "lucide": "^0.294.0",
     "marked": "^10.0.0",
-    "nanoid": "^5.0.3",
+    "nanoid": "^5.0.4",
     "rehype-external-links": "^3.0.0",
     "rehype-katex": "^7.0.0",
     "remark-math": "^6.0.0",
