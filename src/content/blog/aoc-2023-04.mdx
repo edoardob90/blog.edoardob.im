@@ -1,0 +1,167 @@
+---
+title: "🎅🏻🎄 Day 4: Scratchcards ⭐⭐"
+description: "Advent of Code 2023 - Day 4"
+written: 2023-12-04T20:49:22+01:00
+tags:
+  - wolfram
+  - aoc23
+slug: aoc23-day4
+---
+
+import MarginNote from "@/components/MarginNote.astro";
+
+Oggi mi prendo una gustosa (ma sofferta) rivincita sulla disfatta totale di ieri. La prima parte del problema non è stata particolarmente difficile, mentre la seconda mi ha richiesto un paio d’ore circa di tentativi. Credo però di aver imparato diverse cose sul linguaggio che sto usando. Perciò: qual è il problema?
+
+Ci tocca dare una mano a un altro elfo che sembra non aver capito cosa potrebbe aver vinto da una pila di gratta-e-vinci (*scratch-cards*, in inglese). L’insieme dei (suoi) gratta-e-vinci è, per esempio, così:
+
+```
+Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
+Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19
+Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1
+Card 4: 41 92 73 84 69 | 59 84 76 51 58  5 54 83
+Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36
+Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
+```
+
+In ogni riga, sulla sinistra di `|` ci sono i numeri **vincenti**, mentre sulla destra i **nostri numeri**. Senza sapere le regole, presumiamo che il punteggio sia calcolato a partire dai numeri vincenti.
+
+1. Il primo numero vincente che possediamo vale 1.
+2. Dal secondo numero in poi in nostro possesso, il punteggio raddoppia.
+
+Per prima cosa, estraiamo i *winning numbers* che sono anche in nostro possesso:
+
+```wolfram
+winningNumbers = DeleteCases[
+ Apply[Intersection] /@ 
+  Flatten[StringCases[
+    SplitLines[day4], _ ~~ ": " ~~ wins__ ~~ "|" ~~ nums__ :> 
+     StringSplit[{wins, nums}]], 1], {}]
+```
+
+C’è un parsing standard <MarginNote text="C'è una funzione che userò talmente tante volte che ne ho definita una scorciatoia: `SplitLines[s]` non è built-in, ma è un alias di `StringSplit[s, &quot;\n&quot;]`." /> di ogni riga dell’input, in cui raccogliamo le due porzioni separate da `|`. Poi, otteniamo i singoli numeri per i due gruppi con `StringSplit[{wins, nums}]`.
+
+Dopo aver “normalizzato” l’input (ci sbarazziamo di un livello di parentesi con `Flatten`), prendiamo l’intersezione dei due gruppi per ogni riga. Infine, eliminiamo le liste vuote: delle carte 5 e 6 non abbiamo nessun numero vincente, quindi l’intersezione è l’insieme vuoto.
+
+Ora non ci resta che calcolare i punteggi per ogni riga e fare la somma:
+
+```wolfram
+Total[Nest[2#&, 1, Length@# - 1] & /@ winningNumbers]
+```
+
+`Nest` è un [built-in utilissimo del Wolfram Language](https://reference.wolfram.com/language/ref/Nest.html), uno dei costrutti che si usano al posto di loop espliciti. `Nest[f, x, N]` applica ripetutamente `f` per `N` volte, partendo dal valore di partenza `x`. Il numero di iterazioni è la lunghezza della lista **meno 1** perché il raddoppio si applica dal secondo numero vincente in poi.
+
+### Part 2
+
+Le regole corrette sono più complicate, e ce lo aspettavamo. Dobbiamo sempre determinare quanti dei numeri vincenti possediamo, ma questo numero ci dice un’altra cosa: _a quante copie extra di carte abbiamo diritto._
+
+E quali carte extra, di preciso? Le carte **seguenti** a quella corrente. Ad esempio: la carta 1 ha 4 numeri vincenti, quindi otteniamo una copia di ognuna delle 4 carte successive alla carta 1, dalla 2 alla 5.
+
+Sappiamo due cose che rimangono costanti:
+
+1. I numeri vincenti per ogni carta
+2. Quali copie ricevo per ogni carta
+
+A prima vista sembra un problema ricorsivo, ma non lo è. Bisogna solo capire che cosa dobbiamo aggiornare a ogni step (ossia a ogni carta) e come. Il “cosa” è facile: un contatore di quante carte 1, 2, ecc. abbiamo.
+
+Il contatore parte da 1 per ogni carta:
+
+```wolfram
+counts = Counts@Range@Length@SplitLines[day4];
+```
+
+Ci salviamo anche quanti sono i numeri vincenti per ogni carta. Non ci interessa più *quali*, ma solo *quanti* sono.
+
+```wolfram
+winningNumbers = 
+ Map[Length, 
+  Apply[Intersection] /@ 
+   Flatten[StringCases[
+     SplitLines[day4], _ ~~ ": " ~~ wins__ ~~ "|" ~~ nums__ :> 
+      StringSplit[{wins, nums}]], 1]
+  ]
+```
+
+E adesso la parte più interessante, quella su cui ho sbattuto la testa praticamente tutto il tempo che ho impiegato a risolvere il puzzle:
+
+```wolfram
+With[{numCards = Length@SplitLines[day4]},
+  Fold[
+   With[{
+   updates = #1[First@#2] * Counts@Range[First@#2 + 1, Total@#2]
+   },
+     Merge[{#1, updates}, Total]
+     ]&,
+   counts,
+   Thread[{Range@numCards, winningNumbers}]
+   ]
+  ] // Total
+```
+
+Ci sono diversi pezzi interessanti qui.
+
+`Fold` è un [altro built-in](https://reference.wolfram.com/language/ref/Fold.html) molto versatile, parente stretto di `Nest`. Fa una cosa leggermente diversa:
+
+```wolfram
+Fold[f, 1, {a, b, c}]
+
+(* f[f[f[1, a], b], c] *)
+```
+
+Applica ripetutamente `f` con due argomenti: un valore iniziale (il secondo argomento) e il primo della lista; poi il risultato e il secondo elemento della lista; poi il terzo con il secondo risultato, ecc.
+
+Il nostro valore di partenza è ovviamente `counts`, mentre la lista da cui `Fold` pescherà gli argomenti da passare alla funzione come secondo parametro è `Thread[{Range@numCards, winningNumbers}]`. Per l’input di esempio sarebbe:
+
+```
+{{1, 4}, {2, 3}, {3, 2}, {4, 1}, {5, 0}, {6, 0}}
+```
+
+È semplicemente una lista di coppie; ogni coppia è il numero di una carta e quanti numeri vincenti possediamo per quella carta. Abbiamo bisogno di entrambi i numeri per sapere *quante e quali* carte extra riceviamo.
+
+Queste due informazioni vengono usate nella funzione di `Fold`:
+
+```wolfram
+With[{
+  updates = #1[First@#2] * Counts@Range[First@#2 + 1, Total@#2]},
+	 Merge[{#1, updates}, Total] 
+]&
+```
+
+`updates` è un’Association che ci dice quante carte 1, 2, ecc. abbiamo guadagnato. `Merge` poi combina `updates` con il **primo argomento** che viene passato alla funzione di `Fold`, e cioè il valore corrente di `counts.` È più semplice provare a eseguire il codice per capire cosa succede davvero.
+
+Come esempio, provo a fare un *unraveling* a mano. Ci sono due simboli strani qui sotto: `%` e `%%`. Indicano semplicemente l’output precedente e quello ancora prima, rispettivamente. Se gli output fossero una lista, `% = output[[-1]]` e `%% = output[[-2]]`.
+
+```wolfram
+wins = {{1, 4}, {2, 3}, {3, 2}, {4, 1}, {5, 0}, {6, 0}}
+start = <|1 -> 1, 2 -> 1, 3 -> 1, 4 -> 1, 5 -> 1, 6 -> 1|>
+
+(* primo step *)
+Counts@Range[1 + 1, 1 + 4] * start[1]
+Merge[{start, %}, Total]
+
+(* secondo step *)
+Counts@Range[2 + 1, 2 + 2] * %[2]
+Merge[{%%, %}, Total]
+
+(* terzo step *)
+Counts@Range[3 + 1, 3 + 2] * %[3]
+Merge[{%%, %}, Total]
+
+(* OUTPUT *)
+
+(* inizio *)
+<|1 -> 1, 2 -> 1, 3 -> 1, 4 -> 1, 5 -> 1, 6 -> 1|>
+
+(* primo step *)
+<|2 -> 1, 3 -> 1, 4 -> 1, 5 -> 1|>
+<|1 -> 1, 2 -> 2, 3 -> 2, 4 -> 2, 5 -> 2, 6 -> 1|>
+
+(* secondo step *)
+<|3 -> 2, 4 -> 2|>
+<|1 -> 1, 2 -> 2, 3 -> 4, 4 -> 4, 5 -> 2, 6 -> 1|>
+
+(* terzo step *)
+<|4 -> 4, 5 -> 4|>
+<|1 -> 1, 2 -> 2, 3 -> 4, 4 -> 8, 5 -> 6, 6 -> 1|>
+```
+
+La chiave di tutto è proprio la moltiplicazione tra quante carte di un certo numero possiedo e quante ne devo aggiungere. Se, per esempio, ogni carta 2 mi dà diritto ad altre 2 carte, qualora avessi **più di una** carta 2, **ognuna** di queste mi farebbe guadagnare le 2 carte extra. Ed era proprio questo punto che sbagliavo nei primi tentativi.
