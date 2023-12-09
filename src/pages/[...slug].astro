@@ -33,6 +33,10 @@ const { Content } = await post.render();
 ---
 
 <style lang='scss' is:global>
+	code {
+		@apply before:content-none after:content-none;
+	}
+
 	section.footnotes {
 		@apply font-outer prose-base md:prose-lg mx-0 mt-8
 	    before:content-['•••'] before:text-xl before:block before:text-center
