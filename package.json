@@ -17,7 +17,7 @@
     "@astrojs/sitemap": "^3.0.3",
     "@astrojs/tailwind": "^5.0.3",
     "astro": "^4.0.5",
-    "lucide": "^0.297.0",
+    "lucide": "^0.298.0",
     "marked": "^11.1.0",
     "nanoid": "^5.0.4",
     "rehype-external-links": "^3.0.0",
